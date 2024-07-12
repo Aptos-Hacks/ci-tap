@@ -1,6 +1,6 @@
 public static class Constants
 {
-    public static class Services
+    public static class Urls
     {
         public static class Backend
         {

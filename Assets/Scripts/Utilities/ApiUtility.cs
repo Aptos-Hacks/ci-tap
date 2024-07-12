@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +30,11 @@ public static class ApiUtility
         }
         catch (HttpRequestException ex)
         {
-            HandleApiException(ex);
+            if (HandleApiException != null)
+            {
+                HandleApiException(ex);
+            }
+            
             return null;
         }
     }

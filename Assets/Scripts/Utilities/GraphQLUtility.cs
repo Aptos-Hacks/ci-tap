@@ -13,7 +13,7 @@ public static class GraphQLUtility
         [JsonProperty("input")]
         public TInput Input { get; set; }
     }
-    public static async Task<TResponseType> Query<TInput, TResponseType>(
+    public static async Task<TResponseType> QueryAsync<TInput, TResponseType>(
         string url,
         string query,
         TInput input,

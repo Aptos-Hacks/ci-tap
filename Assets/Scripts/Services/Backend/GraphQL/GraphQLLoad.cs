@@ -27,7 +27,8 @@ public static class GraphQLLoad
   load(input: $input) {
     game {
       accountId,
-      balance
+      balance,
+      totalBonus
     }
   }
 }
@@ -38,7 +39,7 @@ public static class GraphQLLoad
     public static async Task<LoadResponseSchema> LoadAsync(Query query, LoadInput input, HandleGraphQLException HandleGraphQLException = null)
     {
         var queryString = EnumUtility.GetDescription(query);
-        var type = await GraphQLUtility.Query<LoadInput, LoadResponseType>(Constants.Services.Backend.graphQLUrl, queryString, input, HandleGraphQLException);
-        return type.LoadResponseSchema;
+        var responseType = await GraphQLUtility.QueryAsync<LoadInput, LoadResponseType>(Constants.Urls.Backend.graphQLUrl, queryString, input, HandleGraphQLException);
+        return responseType.LoadResponseSchema;
     }
 }
