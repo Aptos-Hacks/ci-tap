@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using System;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class SessionController : SingletonPersistent<SessionController>
@@ -17,6 +16,9 @@ public class SessionController : SingletonPersistent<SessionController>
     [SerializeField]
     public AutoClickerSession autoClickerSession;
 
+    [SerializeField]
+    private float timeInterval = 10f;
+
     public bool isLoading = false;
     public bool isSaving = false;
 
@@ -32,38 +34,33 @@ public class SessionController : SingletonPersistent<SessionController>
         isLoading = false;
     }
 
-    public async void SaveAsync()
+    public void Save(ApiSave.SavePayload payload)
     {
-        isSaving = true;
-
-        await ApiSave.SaveAsync(new()
-        {
-            PublicKey = "0x1d6e4b37cbda1105618acfa86b10bcc92e74baf05df5afce4f4d0297d8d6427b",
-            Signature = "0x0cb1a1e1c8a3762282630449cefeb47d803caddba25f0df61d056dc02642afc9037c69a775e6cf96423f88dd06e193f71b1d1e93d1d842ece9c0c93f0e446e0d",
-            Payload = new ()
-            {   
-                Balance = 55,
-                TotalBonus = 66f,
-                Timestamp = new DateTime(2024, 12, 5),
-            }
-        });
-
-        isSaving = false;
-    }
-
-    private async void UpdateAsync()
-    {
-        while (true)
-        {
-            await Task.Delay(TimeSpan.FromSeconds(30));
-            SaveAsync();
-        }
+        BrowserController.Instance.RequestSendPayload("Save", JsonConvert.SerializeObject(payload));
     }
 
     private void Start()
     {
         LoadAsync();
-        UpdateAsync();
+    }
+
+    private float timer = 0;
+
+    private void Update()
+    {
+        timer += Time.deltaTime;
+
+        if (timer >= timeInterval)
+        {
+            Save(new()
+            {
+                Balance = balance,
+                TotalBonus = totalBonus,
+                Timestamp = new DateTime()
+            });
+
+            timer -= timeInterval;
+        }
     }
 }
 
