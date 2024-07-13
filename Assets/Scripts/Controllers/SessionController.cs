@@ -6,6 +6,18 @@ public class SessionController : SingletonPersistent<SessionController>
 {
     [ReadOnly]
     [SerializeField]
+    public string address;
+
+    [ReadOnly]
+    [SerializeField]
+    public int previousBalance = 0;
+
+    [ReadOnly]
+    [SerializeField]
+    public float previousTotalBonus = 0;
+
+    [ReadOnly]
+    [SerializeField]
     public int balance = 0;
 
     [ReadOnly]
@@ -17,31 +29,47 @@ public class SessionController : SingletonPersistent<SessionController>
     public AutoClickerSession autoClickerSession;
 
     [SerializeField]
-    private float timeInterval = 10f;
+    private float timeInterval = 5f;
 
-    public bool isLoading = false;
-    public bool isSaving = false;
-
-    public async void LoadAsync()
+    public class SavePayload : Payload
     {
-        isLoading = true;
-        var response = await GraphQLLoad.LoadAsync(GraphQLLoad.Query.Zero, new()
-        {
-            Address = "0x1861a495f12af4b16e97381b8eaeda96c261abe557a720dbdc7c871f444e9ee2"
-        });
-        balance = response.Game.Balance;
-        totalBonus = response.Game.TotalBonus;
-        isLoading = false;
+        [JsonProperty("balanceChange")]
+        public int BalanceChange { get; set; }
+
+        [JsonProperty("bonusChange")]
+        public float BonusChange { get; set; }
     }
 
-    public void Save(ApiSave.SavePayload payload)
+    public void Save(SavePayload payload)
     {
+        previousBalance = balance;
+        previousTotalBonus = totalBonus;
+
         BrowserController.Instance.RequestSendPayload("Save", JsonConvert.SerializeObject(payload));
     }
 
-    private void Start()
+    public class LoadParams
     {
-        LoadAsync();
+        [JsonProperty("address")]
+        public string Address { get; set; }
+
+        [JsonProperty("balance")]
+        public int Balance { get; set; }
+
+        [JsonProperty("totalBonus")]
+        public float TotalBonus { get; set; }
+    }
+
+    public void Load(string serializedParams)
+    {
+        var _params = JsonConvert.DeserializeObject<LoadParams>(serializedParams);
+        address = _params.Address;
+        
+        previousBalance = _params.Balance;
+        balance = _params.Balance;
+
+        previousTotalBonus = _params.TotalBonus;
+        totalBonus = _params.TotalBonus;
     }
 
     private float timer = 0;
@@ -54,8 +82,8 @@ public class SessionController : SingletonPersistent<SessionController>
         {
             Save(new()
             {
-                Balance = balance,
-                TotalBonus = totalBonus,
+                BalanceChange = balance - previousBalance,
+                BonusChange = totalBonus - previousTotalBonus,
                 Timestamp = new DateTime()
             });
 
@@ -64,7 +92,7 @@ public class SessionController : SingletonPersistent<SessionController>
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class AutoClickerSession
 {
     public int level = 0;
