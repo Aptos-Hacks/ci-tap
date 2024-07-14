@@ -1,7 +1,9 @@
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class BonusBarController : Singleton<BonusBarController>
+public class GameplayBonusBarController : Singleton<GameplayBonusBarController>
 {
     [SerializeField]
     private float bonusGrowthRate = 1;
@@ -20,10 +22,23 @@ public class BonusBarController : Singleton<BonusBarController>
         if (progress > 100f)
         {
             level += 1;
+            RenderLevel();
+
             progress -= 100;
         }
-        SessionController.Instance.balance += level;
-        SessionController.Instance.totalBonus += bonusGrowthRate;
+        BootstrapSessionController.Instance.balance += level;
+        BootstrapSessionController.Instance.totalBonus += bonusGrowthRate;
+    }
+
+    [SerializeField]
+    private Slider slider;
+
+    [SerializeField]
+    private TMP_Text levelText;
+
+    private void RenderLevel()
+    {
+        levelText.text = $"x{level}";
     }
 
     public void SubtractBonus()
@@ -40,13 +55,25 @@ public class BonusBarController : Singleton<BonusBarController>
                 return;
             }
             level -= 1;
+            RenderLevel();
+
             progress += 100;
         }
-        SessionController.Instance.totalBonus -= _bonusDeclineRate;
+        BootstrapSessionController.Instance.totalBonus -= _bonusDeclineRate;
+    }
+
+    private void FixedUpdate()
+    {
+        slider.value = progress / 100f;
     }
 
     private void Update()
     {
         SubtractBonus();
+    }
+
+    private void Start()
+    {
+        RenderLevel();
     }
 }

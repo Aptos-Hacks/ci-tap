@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BrowserController : SingletonPersistent<BrowserController>
+public class BootstrapBrowserController : SingletonPersistent<BootstrapBrowserController>
 {
     [DllImport("__Internal")]
     private static extern void SendPayload(string action, string payloadMessage);

@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System;
 using UnityEngine;
 
-public class SessionController : SingletonPersistent<SessionController>
+public class BootstrapSessionController : SingletonPersistent<BootstrapSessionController>
 {
     [ReadOnly]
     [SerializeField]
@@ -45,7 +45,7 @@ public class SessionController : SingletonPersistent<SessionController>
         previousBalance = balance;
         previousTotalBonus = totalBonus;
 
-        BrowserController.Instance.RequestSendPayload("Save", JsonConvert.SerializeObject(payload));
+        BootstrapBrowserController.Instance.RequestSendPayload("Save", JsonConvert.SerializeObject(payload));
     }
 
     public class LoadParams

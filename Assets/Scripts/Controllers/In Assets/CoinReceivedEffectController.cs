@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class CoinReceivedUXController : MonoBehaviour
+public class CoinReceivedEffectController : MonoBehaviour
 {
     [SerializeField]
     private float distance = 100;
@@ -20,7 +20,7 @@ public class CoinReceivedUXController : MonoBehaviour
     private void Start()
     {
         canvasGroup = GetComponent<CanvasGroup>();
-        amountText.text = $"+{BonusBarController.Instance.level}";
+        amountText.text = $"+{GameplayBonusBarController.Instance.level}";
     }
 
     public void Update()
