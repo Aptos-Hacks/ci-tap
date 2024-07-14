@@ -1,6 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-
 
 public delegate void OnTouch(Vector3 touchPosition);
 public static class MobileUtility

@@ -11,7 +11,7 @@ public static class ApiUtility
         string url,
         TRequestBody body,
         HandleApiException HandleApiException = null
-        ) where TRequestBody : class where TResponseData : class
+        ) where TRequestBody : class, new() where TResponseData : class
     {
         try
         {
