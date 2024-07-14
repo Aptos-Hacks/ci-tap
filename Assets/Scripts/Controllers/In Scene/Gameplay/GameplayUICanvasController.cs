@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -18,7 +16,7 @@ public class GameplayUICanvasController : Singleton<GameplayUICanvasController>
 
     private void Start()
     {
-        addressText.text = TruncateUtility.TrucateAddress(BootstrapSessionController.Instance.address);
+         addressText.text = TruncateUtility.TrucateAddress(BootstrapSessionController.Instance.address);
     }
 }
 

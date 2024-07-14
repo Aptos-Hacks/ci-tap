@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+using Michsky.MUIP;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TitleUICanvasController : Singleton<TitleUICanvasController>
 {
     [SerializeField]
-    private Button playButton;
+    private ButtonManager playButton;
 
     private void Start()
     {
