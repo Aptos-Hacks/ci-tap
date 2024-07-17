@@ -1,18 +1,26 @@
 using Newtonsoft.Json;
 using System;
 using System.Runtime.InteropServices;
-using Unity.VisualScripting;
-using UnityEngine;
 
 public class BootstrapBrowserController : SingletonPersistent<BootstrapBrowserController>
 {
     [DllImport("__Internal")]
     private static extern void SendPayload(string action, string payloadMessage);
 
+    [DllImport("__Internal")]
+    private static extern void Back();
+
     public void RequestSendPayload(string action, string payloadMessage)
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
     SendPayload (action, payloadMessage);
+#endif
+    }
+
+    public void RequestBack()
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+    Back ();
 #endif
     }
 }
@@ -24,4 +32,10 @@ public class PublicKeyAndSignature
 
     [JsonProperty("signature")]
     public string Signature { get; set; }
+}
+
+public abstract class Payload
+{
+    [JsonProperty("timestamp")]
+    public DateTime Timestamp { get; set; }
 }

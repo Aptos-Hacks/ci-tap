@@ -18,7 +18,10 @@ public static class MobileUtility
                 var collider = transform.GetComponent<Collider2D>();
                 if (collider.bounds.Contains(touch.position))
                 {
-                    OnTouch(touch.position);
+                    if (OnTouch != null)
+                    {
+                        OnTouch(touch.position);
+                    }
                 }
             }
 

@@ -1,49 +1,40 @@
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Accessibility;
+using UnityEngine.EventSystems;
 
-public class GameplayCoinController : Singleton<GameplayCoinController>
+public class GameplayCoinController : Singleton<GameplayCoinController>, IPointerClickHandler
 {
     private const string TAP_TRIGGER = "Tap";
 
     [SerializeField]
-    private Transform coinReceivedUxPrefab;
+    private Transform coinReceivedEffectPrefab;
 
     [SerializeField]
     private Transform container;
 
-    // Start is called before the first frame update
-    private void Start()
+    public void AddCoinAndBonusByTapping(Vector3 position, AddCoinAndBonusOptions options = null)
     {
-    }
+        GameplayBonusBarController.Instance.AddBonus();
+        BootstrapSessionController.Instance.balance += BootstrapSessionController.Instance.level;
 
-    // Update is called once per frame
-    private void Update()
-    {
-        MobileUtility.HandleTouch(transform, (touchPostion) =>
-        {
-            AddCoinAndBonus(touchPostion);
-            TriggerUtility.ExecuteTrigger(transform, TAP_TRIGGER);
-        });
-    }
+        var coinReceivedEffect = Instantiate(coinReceivedEffectPrefab, container);
+        coinReceivedEffect.GetComponent<CoinReceivedEffectController>().Amount = BootstrapSessionController.Instance.level;
+        coinReceivedEffect.transform.position = position;
 
-    public void AddCoinAndBonus(Vector3? touchPosition = null, AddCoinAndBonusOptions options = null)
-    {
-        GameplayBonusBarController.Instance.AddCoinAndBonus();
-        var coinReceivedUx = Instantiate(coinReceivedUxPrefab, container);
-        if (touchPosition.HasValue)
-        {
-            ((RectTransform)coinReceivedUx.transform).position = touchPosition.Value;
-        }
-        
         if (options != null)
         {
             if (options.IsAutoTapped)
             {
-                coinReceivedUx.GetComponentInChildren<TMP_Text>().color = Color.yellow;
+                Debug.Log("Auto tapped!");
+                //coinReceivedEffect.GetComponentInChildren<TMP_Text>().color = Color.yellow;
             }
         }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        AddCoinAndBonusByTapping(eventData.position);
+        TriggerUtility.ExecuteTrigger(transform, TAP_TRIGGER);
     }
 }
 

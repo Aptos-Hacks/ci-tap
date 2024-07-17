@@ -26,6 +26,16 @@ public class BootstrapLoadingSceneManagerController : SingletonPersistent<Bootst
         StartCoroutine(LoadSceneCoroutine(sceneToLoad));
     }
 
+    public void LoadSceneAdditive(SceneName sceneToLoad)
+    {
+        SceneManager.LoadScene(EnumUtility.GetDescription(sceneToLoad), LoadSceneMode.Additive);
+    }
+
+    public void UnloadSceneAdditive(SceneName sceneToLoad)
+    {
+       SceneManager.UnloadSceneAsync(EnumUtility.GetDescription(sceneToLoad));
+    }
+
     private IEnumerator LoadSceneCoroutine(SceneName sceneToLoad, bool isNetworkSessionActive = false)
     {
         BootstrapLoadingFadeEffectCanvasController.Instance.FadeIn();
@@ -44,5 +54,7 @@ public enum SceneName
     [Description("Title")]
     Title,
     [Description("Gameplay")]
-    Gameplay
+    Gameplay,
+    [Description("Upgrade")]
+    Upgrade
 }

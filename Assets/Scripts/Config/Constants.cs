@@ -8,5 +8,8 @@ public static class Constants
             public readonly static string graphQLUrl = "https://starci.net:9992/graphql";
         }
     }
-
+    public static class GameObjectNames
+    {
+        public readonly static string coinReceivedEffectContainerCanvas = "Coin Received Effect Container Canvas";
+    }
 }

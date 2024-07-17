@@ -1,7 +1,5 @@
-using System;
-using TMPro;
+using Michsky.MUIP;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameplayBonusBarController : Singleton<GameplayBonusBarController>
 {
@@ -11,69 +9,48 @@ public class GameplayBonusBarController : Singleton<GameplayBonusBarController>
     [SerializeField]
     private float bonusDeclineRate = 2f;
 
-    public int level = 1;
-
-    [Range(0, 100)]
-    public float progress = 0;
-
-    public void AddCoinAndBonus()
+    public void AddBonus()
     {
-        progress += bonusGrowthRate / level;
-        if (progress > 100f)
+        BootstrapSessionController.Instance.progress += bonusGrowthRate / BootstrapSessionController.Instance.level;
+        if (BootstrapSessionController.Instance.progress > 100f)
         {
-            level += 1;
-            RenderLevel();
-
-            progress -= 100;
+            BootstrapSessionController.Instance.Level += 1;
+            BootstrapSessionController.Instance.progress -= 100;
         }
-        BootstrapSessionController.Instance.balance += level;
-        BootstrapSessionController.Instance.totalBonus += bonusGrowthRate;
     }
-
-    [SerializeField]
-    private Slider slider;
-
-    [SerializeField]
-    private TMP_Text levelText;
-
-    private void RenderLevel()
-    {
-        levelText.text = $"x{level}";
-    }
-
     public void SubtractBonus()
     {
         var _bonusDeclineRate = bonusDeclineRate * Time.deltaTime;
 
-        if (level == 1 && progress == 0) return;
-        progress -= _bonusDeclineRate / level;
-        if (progress < 0f)
+        if (BootstrapSessionController.Instance.level == 1 && BootstrapSessionController.Instance.progress == 0) return;
+        BootstrapSessionController.Instance.progress -= _bonusDeclineRate / BootstrapSessionController.Instance.level;
+        if (BootstrapSessionController.Instance.progress < 0f)
         {
-            if (level == 1)
+            if (BootstrapSessionController.Instance.level == 1)
             {
-                progress = 0;
+                BootstrapSessionController.Instance.progress = 0;
                 return;
             }
-            level -= 1;
-            RenderLevel();
-
-            progress += 100;
+            BootstrapSessionController.Instance.Level -= 1;
+            BootstrapSessionController.Instance.progress += 100;
         }
-        BootstrapSessionController.Instance.totalBonus -= _bonusDeclineRate;
+    }
+
+    [SerializeField]
+    private ProgressBar progressBar;
+
+    private void RenderProgressBar()
+    {
+        progressBar.currentPercent = BootstrapSessionController.Instance.progress;
     }
 
     private void FixedUpdate()
     {
-        slider.value = progress / 100f;
+        RenderProgressBar();
     }
 
     private void Update()
     {
         SubtractBonus();
-    }
-
-    private void Start()
-    {
-        RenderLevel();
     }
 }

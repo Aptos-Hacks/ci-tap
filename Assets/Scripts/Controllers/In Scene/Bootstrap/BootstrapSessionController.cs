@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BootstrapSessionController : SingletonPersistent<BootstrapSessionController>
 {
@@ -8,13 +9,31 @@ public class BootstrapSessionController : SingletonPersistent<BootstrapSessionCo
     [SerializeField]
     public string address;
 
+    public UnityEvent updateAddressEvent;
+    public string Address
+    {
+        get { return address; }
+        set {
+            address = value;
+            updateAddressEvent.Invoke();
+        }
+    }
+
     [ReadOnly]
     [SerializeField]
     public int previousBalance = 0;
 
     [ReadOnly]
     [SerializeField]
-    public float previousTotalBonus = 0;
+    public int previousLevel = 1;
+
+    [ReadOnly]
+    [SerializeField]
+    public float previousProgress = 0;
+
+    [ReadOnly]
+    [SerializeField]
+    public int previousAutoTapperLevel = 1;
 
     [ReadOnly]
     [SerializeField]
@@ -22,30 +41,70 @@ public class BootstrapSessionController : SingletonPersistent<BootstrapSessionCo
 
     [ReadOnly]
     [SerializeField]
-    public float totalBonus = 0;
+    public int level = 1;
+    public UnityEvent updateLevelEvent;
+    public int Level
+    {
+        get { return level; }
+        set
+        {
+            level = value;
+            updateLevelEvent.Invoke();
+        }
+    }
 
     [ReadOnly]
     [SerializeField]
-    public AutoClickerSession autoClickerSession;
+    public float progress = 0;
+
+    [ReadOnly]
+    [SerializeField]
+    public int autoTapperLevel = 1;
+
+    public UnityEvent updateAutoTapperLevelEvent;
+    public int AutoTapperLevel
+    {
+        get { return autoTapperLevel; }
+        set
+        {
+            autoTapperLevel = value;
+            updateAutoTapperLevelEvent.Invoke();
+        }
+    }
 
     [SerializeField]
-    private float timeInterval = 5f;
+    private float timeIntervalSeconds = 5f;
 
     public class SavePayload : Payload
     {
         [JsonProperty("balanceChange")]
         public int BalanceChange { get; set; }
 
-        [JsonProperty("bonusChange")]
-        public float BonusChange { get; set; }
+        [JsonProperty("levelChange")]
+        public int LevelChange { get; set; }
+
+        [JsonProperty("progressChange")]
+        public float ProgressChange { get; set; }
+
+        [JsonProperty("autoTapperLevelChange")]
+        public int AutoTapperLevelChange { get; set; }
     }
 
-    public void Save(SavePayload payload)
+    public void Save()
     {
-        previousBalance = balance;
-        previousTotalBonus = totalBonus;
+        BootstrapBrowserController.Instance.RequestSendPayload("Save", JsonConvert.SerializeObject(new SavePayload()
+        {
+            BalanceChange = balance - previousBalance,
+            LevelChange = level - previousLevel,
+            ProgressChange = progress - previousProgress,
+            AutoTapperLevelChange = AutoTapperLevel - previousAutoTapperLevel,
+            Timestamp = new()
+        }));
 
-        BootstrapBrowserController.Instance.RequestSendPayload("Save", JsonConvert.SerializeObject(payload));
+        previousBalance = balance;
+        previousLevel = level;
+        previousProgress = progress;
+        previousAutoTapperLevel = autoTapperLevel;
     }
 
     public class LoadParams
@@ -56,20 +115,37 @@ public class BootstrapSessionController : SingletonPersistent<BootstrapSessionCo
         [JsonProperty("balance")]
         public int Balance { get; set; }
 
-        [JsonProperty("totalBonus")]
-        public float TotalBonus { get; set; }
+        [JsonProperty("level")]
+        public int Level { get; set; }
+
+        [JsonProperty("progress")]
+        public float Progress { get; set; }
+
+        [JsonProperty("autoTapperLevel")]
+        public int AutoTapperLevel { get; set; }
     }
 
+    private bool isLoaded = false;
     public void Load(string serializedParams)
     {
+        if (isLoaded) return;
+
         var _params = JsonConvert.DeserializeObject<LoadParams>(serializedParams);
-        address = _params.Address;
-        
+        Address = _params.Address;
+
         previousBalance = _params.Balance;
         balance = _params.Balance;
 
-        previousTotalBonus = _params.TotalBonus;
-        totalBonus = _params.TotalBonus;
+        previousLevel = _params.Level;
+        level = _params.Level;
+
+        previousProgress = _params.Progress;
+        progress = _params.Progress;
+
+        previousAutoTapperLevel = _params.AutoTapperLevel;
+        autoTapperLevel = _params.AutoTapperLevel;
+
+        isLoaded = true;
     }
 
     private float timer = 0;
@@ -78,22 +154,17 @@ public class BootstrapSessionController : SingletonPersistent<BootstrapSessionCo
     {
         timer += Time.deltaTime;
 
-        if (timer >= timeInterval)
+        if (timer >= timeIntervalSeconds)
         {
-            Save(new()
-            {
-                BalanceChange = balance - previousBalance,
-                BonusChange = totalBonus - previousTotalBonus,
-                Timestamp = new DateTime()
-            });
-
-            timer -= timeInterval;
+            Save();
+            timer -= timeIntervalSeconds;
         }
     }
-}
 
-[Serializable]
-public class AutoClickerSession
-{
-    public int level = 0;
+    private void Start()
+    {
+        updateAddressEvent = new();
+        updateLevelEvent = new();
+        updateAutoTapperLevelEvent = new();
+    }
 }

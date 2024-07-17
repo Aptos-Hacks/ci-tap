@@ -7,8 +7,8 @@ using UnityEngine;
 public class CoinReceivedEffectController : MonoBehaviour
 {
     [SerializeField]
-    private float distance = 100;
-    
+    private float distance = 100f;
+
     [SerializeField]
     private float duration = 2f;
 
@@ -17,15 +17,29 @@ public class CoinReceivedEffectController : MonoBehaviour
 
     private CanvasGroup canvasGroup;
 
+    private int amount;
+    public int Amount
+    {
+        get
+        {
+            return amount;
+        }
+        set
+        {
+            amount = value;
+            amountText.text = $"+{value}";
+        }
+    }
+
     private void Start()
     {
         canvasGroup = GetComponent<CanvasGroup>();
-        amountText.text = $"+{GameplayBonusBarController.Instance.level}";
     }
 
     public void Update()
     {
-        ((RectTransform)transform).DOAnchorPosY(distance, duration).OnStart(() =>
+
+        ((RectTransform)transform).DOLocalMoveY(transform.localPosition.y + distance, duration).OnStart(() =>
         {
             canvasGroup.DOFade(0f, duration).OnStepComplete(() =>
             {

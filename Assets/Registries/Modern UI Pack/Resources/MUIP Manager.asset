@@ -17,9 +17,9 @@ MonoBehaviour:
   editorHints: 0
   animatedIconColor: {r: 1, g: 1, b: 1, a: 1}
   contextBackgroundColor: {r: 0.21568628, g: 0.29411766, b: 0.37254903, a: 1}
-  buttonFont: {fileID: 11400000, guid: 84dd14695854bbc43a5faa24fcf93d0d, type: 2}
-  buttonNormalColor: {r: 1, g: 1, b: 1, a: 1}
-  buttonAccentColor: {r: 0, g: 0, b: 0, a: 1}
+  buttonFont: {fileID: 11400000, guid: b32294192e98e6d4da9eeb856b71c7ed, type: 2}
+  buttonNormalColor: {r: 0.1764706, g: 0.1764706, b: 0.1764706, a: 1}
+  buttonAccentColor: {r: 0.20392157, g: 0.827451, b: 0.6, a: 1}
   buttonDisabledAlpha: 0.4
   dropdownFont: {fileID: 11400000, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
   dropdownItemFont: {fileID: 11400000, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
@@ -49,12 +49,12 @@ MonoBehaviour:
   notificationTitleColor: {r: 1, g: 1, b: 1, a: 1}
   notificationDescriptionColor: {r: 1, g: 1, b: 1, a: 1}
   notificationIconColor: {r: 1, g: 1, b: 1, a: 1}
-  progressBarLabelFont: {fileID: 11400000, guid: 84dd14695854bbc43a5faa24fcf93d0d, type: 2}
+  progressBarLabelFont: {fileID: 11400000, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
   progressBarLabelFontSize: 25
-  progressBarColor: {r: 1, g: 1, b: 1, a: 1}
-  progressBarBackgroundColor: {r: 1, g: 1, b: 1, a: 0.05882353}
+  progressBarColor: {r: 0.20392157, g: 0.827451, b: 0.6, a: 1}
+  progressBarBackgroundColor: {r: 1, g: 1, b: 1, a: 0.19607843}
   progressBarLoopBackgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  progressBarLabelColor: {r: 1, g: 1, b: 1, a: 1}
+  progressBarLabelColor: {r: 1, g: 1, b: 1, a: 0.78431374}
   scrollbarColor: {r: 1, g: 1, b: 1, a: 1}
   scrollbarBackgroundColor: {r: 1, g: 1, b: 1, a: 0.09803922}
   sliderLabelFont: {fileID: 11400000, guid: 84dd14695854bbc43a5faa24fcf93d0d, type: 2}
@@ -76,8 +76,8 @@ MonoBehaviour:
   toggleCheckColor: {r: 1, g: 1, b: 1, a: 1}
   tooltipFont: {fileID: 11400000, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
   tooltipFontSize: 22
-  tooltipTextColor: {r: 1, g: 1, b: 1, a: 1}
-  tooltipBackgroundColor: {r: 0.1764706, g: 0.25490198, b: 0.33333334, a: 1}
+  tooltipTextColor: {r: 0.1764706, g: 0.1764706, b: 0.1764706, a: 1}
+  tooltipBackgroundColor: {r: 1, g: 1, b: 1, a: 1}
   customObjPrimaryFont: {fileID: 11400000, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
   customObjSecondaryFont: {fileID: 11400000, guid: fa328c1ae3ffb6b4583cf371153b0be6, type: 2}
   customObjPrimaryColor: {r: 1, g: 1, b: 1, a: 255}
